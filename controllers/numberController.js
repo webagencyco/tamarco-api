@@ -1,4 +1,3 @@
-// controllers/numberController.js
 import { listAvailableNumbers, purchaseNumber } from '../services/tamarApi.js';
 import { createPaymentIntent } from '../services/stripe.js';
 import Number from '../models/Number.js';
@@ -23,7 +22,6 @@ export const searchNumbers = async (req, res) => {
 export const initiateNumberPurchase = async (req, res) => {
   try {
     const { tariff, number, destination } = req.body;
-    // Here you would calculate the price based on the tariff
     const amount = 1000; // Example: $10.00
     const paymentIntent = await createPaymentIntent(amount, 'usd');
     res.json({ clientSecret: paymentIntent.client_secret });
@@ -36,16 +34,13 @@ export const completeNumberPurchase = async (req, res) => {
   try {
     const { tariff, number, destination, paymentIntentId } = req.body;
     
-    // Verify payment was successful
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
     if (paymentIntent.status !== 'succeeded') {
       throw new Error('Payment was not successful');
     }
 
-    // Purchase number from Tamar
     const purchaseResult = await purchaseNumber(tariff, number, destination);
 
-    // Save number to database
     const newNumber = new Number({
       userId: req.user.id,
       number: purchaseResult.number,
@@ -60,7 +55,6 @@ export const completeNumberPurchase = async (req, res) => {
   }
 };
 
-// controllers/numberController.js
 export const updateNumberDestination = async (req, res) => {
   try {
     const { numberId, newDestination } = req.body;
@@ -68,7 +62,6 @@ export const updateNumberDestination = async (req, res) => {
     if (!number) {
       return res.status(404).json({ message: 'Number not found' });
     }
-    // Here you would call Tamar API to update the destination
     number.destination = newDestination;
     await number.save();
     res.json(number);
@@ -84,7 +77,6 @@ export const cancelNumber = async (req, res) => {
     if (!number) {
       return res.status(404).json({ message: 'Number not found' });
     }
-    // Here you would call Tamar API to cancel the number
     await Number.deleteOne({ _id: numberId });
     res.json({ message: 'Number cancelled successfully' });
   } catch (error) {
