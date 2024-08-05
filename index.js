@@ -1,18 +1,24 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 import express from 'express';
 import { connect } from 'mongoose';
-import passport from 'passport';
+import passport from './config/passportConfig.js';
 import authRouter from './routes/authRoutes.js';
 import numberRouter from './routes/numberRoutes.js';
 import paymentRouter from './routes/payment.js';
+import morgan from 'morgan';
 
-config();
-
+dotenv.config({ path: "./.env" });
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan('tiny'));
+// app.use((req, res, next) => {
+//   console.log('Headers:', req.headers);
+//   next();
+// });
+
 
 connect('mongodb://127.0.0.1:27017/virtual_numbers').finally(() => {
   console.log('Connected to MongoDB');

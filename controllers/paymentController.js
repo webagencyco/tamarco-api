@@ -1,17 +1,20 @@
 import Stripe from 'stripe';
-import Number from '../models/Number.js';
 import axios from 'axios';
+import Number from '../models/Number.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const processPayment = async (req, res) => {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const { amount, currency, source, tariff, number, destination } = req.body;
+  // console.log('Request Body:', req.body); // Log the request body to verify
+
   try {
     const charge = await stripe.charges.create({
       amount,
       currency,
       source,
     });
+    // console.log('Charge:', charge); // Log the charge to verify
 
     const response = await axios.post(
       `${process.env.TAMAR_API_URL}/purchase/number`,
@@ -27,6 +30,7 @@ export const processPayment = async (req, res) => {
         },
       }
     );
+    console.log('Tamar API Response:', response.data); // Log the Tamar API response to verify
 
     const newNumber = new Number({
       userId: req.user.id,
