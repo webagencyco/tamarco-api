@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 router.get('/', authenticate, getNumbers);
-router.get('/search', authenticate, searchNumbers);
+router.get('/search', searchNumbers);
 router.post('/purchase/initiate', authenticate, validateNumberPurchase, initiateNumberPurchase);
 router.post('/purchase/complete', authenticate, validateNumberPurchase, completeNumberPurchase);
 router.put('/:numberId/destination', authenticate, updateNumberDestination);

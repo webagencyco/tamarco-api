@@ -10,6 +10,7 @@ export const getNumbers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 export const searchNumbers = async (req, res) => {
   try {
     const numbers = await listAvailableNumbers(req.query.partialNumber);
@@ -22,7 +23,7 @@ export const searchNumbers = async (req, res) => {
 export const initiateNumberPurchase = async (req, res) => {
   try {
     const { tariff, number, destination } = req.body;
-    const amount = 1000; // Example: $10.00
+    const amount = 1000;
     const paymentIntent = await createPaymentIntent(amount, 'usd');
     res.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
