@@ -2,7 +2,6 @@ import Stripe from 'stripe';
 import axios from 'axios';
 import Number from '../models/Number.js';
 
-
 export const processPayment = async (req, res) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const { amount, currency, source, tariff, number, destination } = req.body;

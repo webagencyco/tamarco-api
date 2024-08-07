@@ -26,6 +26,24 @@ export const register = async (req, res) => {
   }
 };
 
+export const updateUserAddress = async (req, res) => {
+  const { street, townCity, county, postCode } = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.street = street || user.street;
+    user.townCity = townCity || user.townCity;
+    user.county = county || user.county;
+    user.postCode = postCode || user.postCode;
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating address', error: error.message });
+  }
+};
+
 export const login = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err) return next(err);
@@ -38,4 +56,23 @@ export const login = (req, res, next) => {
       user: { id: user._id, username: user.username, email: user.email }
     });
   })(req, res, next);
+};
+
+export const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect old password' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error changing password', error: error.message });
+  }
 };

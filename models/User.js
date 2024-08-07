@@ -5,6 +5,10 @@ const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  street: { type: String },
+  townCity: { type: String },
+  county: { type: String },
+  postCode: { type: String },
 });
 
 UserSchema.pre('save', async function (next) {
