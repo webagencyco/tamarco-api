@@ -17,18 +17,12 @@ export const createNumber = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 export const getNumbers = async (req, res) => {
   try {
-    const numbers = await Number.find({ userId: req.user.id });
-    res.json(numbers);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const searchNumbers = async (req, res) => {
-  try {
-    const numbers = await listAvailableNumbers(req.query.partialNumber);
+    const numbers = await Number.find(
+      { userId: req.user.id }
+    ).select('number _id');
     res.json(numbers);
   } catch (error) {
     res.status(500).json({ error: error.message });

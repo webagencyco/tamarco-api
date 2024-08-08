@@ -4,7 +4,7 @@ import { validateNumberPurchase } from '../middleware/validate.js';
 import {
   createNumber,
   getNumbers,
-  searchNumbers,
+  // searchNumbers,
   initiateNumberPurchase,
   completeNumberPurchase,
   updateNumberDestination,
@@ -16,11 +16,11 @@ import {
 const router = express.Router();
 
 router.post('/', authenticate, createNumber);
-router.get('/', getNumbers);
-router.get('/search', searchNumbers);
+router.get('/',authenticate, getNumbers);
+// router.get('/search', searchNumbers);
 router.post('/purchase/initiate', authenticate, validateNumberPurchase, initiateNumberPurchase);
 router.post('/purchase/complete', authenticate, validateNumberPurchase, completeNumberPurchase);
-router.put('/:numberId/destination', authenticate, updateNumberDestination);
+router.put('/:numberId', authenticate, updateNumberDestination);
 router.delete('/:numberId', authenticate, cancelNumber);
 router.post('/:numberId/usage', authenticate, addNumberUsage);
 router.get('/:numberId/usage', authenticate, getNumberUsage);
