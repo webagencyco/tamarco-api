@@ -16,7 +16,7 @@ import {
 const router = express.Router();
 
 router.post('/', authenticate, createNumber);
-router.get('/', authenticate, getNumbers);
+router.get('/', getNumbers);
 router.get('/search', searchNumbers);
 router.post('/purchase/initiate', authenticate, validateNumberPurchase, initiateNumberPurchase);
 router.post('/purchase/complete', authenticate, validateNumberPurchase, completeNumberPurchase);

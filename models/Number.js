@@ -14,5 +14,5 @@ const NumberSchema = new Schema({
   usage: [UsageSchema],
 });
 
-const Number = model('Number', NumberSchema);
-export default Number;
+const NumberModel = model('Number', NumberSchema);
+export default NumberModel;

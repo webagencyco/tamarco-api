@@ -1,6 +1,7 @@
 import { listAvailableNumbers, purchaseNumber } from "../services/tamarApi.js";
 import { createPaymentIntent } from "../services/stripe.js";
 import Number from "../models/Number.js";
+import axios from "axios";
 
 export const createNumber = async (req, res) => {
   try {
@@ -19,7 +20,9 @@ export const createNumber = async (req, res) => {
 };
 export const getNumbers = async (req, res) => {
   try {
-    const numbers = await Number.find({ userId: req.user.id });
+    const numbers = await axios.get(
+      `${process.env.TAMAR_API_URL}/list/numbers`
+    )
     res.json(numbers);
   } catch (error) {
     res.status(500).json({ error: error.message });
