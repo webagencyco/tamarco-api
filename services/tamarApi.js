@@ -8,9 +8,23 @@ const tamarApi = axios.create({
   },
 });
 
-export const listAvailableNumbers = async (partialNumber) => {
-  const response = await tamarApi.get(`/list/available/${partialNumber}`);
+export const listNumbers = async () => {
+  const response = await tamarApi.get(`/list/numbers`);
   return response.data;
+};
+
+export const listTariffs = async () => {
+  const response = await tamarApi.get(`/list/tariffs/`);
+  return response.data;
+};
+
+export const tariffPrices = async (req, res) => {
+  try{
+    const response = await tamarApi.get(`/list/prices/tariff/`);
+  res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const purchaseNumber = async (tariff, number, destination) => {

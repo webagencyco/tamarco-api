@@ -1,7 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import passport from "passport";
 import crypto from 'crypto';
 import { sendVerificationEmail } from "../services/emailService.js";
 
@@ -53,7 +52,6 @@ export const register = async (req, res) => {
   }
 };
 
-
 export const updateUserAddress = async (req, res) => {
   const { street, townCity, county, postCode } = req.body;
   try {
@@ -92,7 +90,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     res.json({

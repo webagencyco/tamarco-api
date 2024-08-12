@@ -10,13 +10,19 @@ import {
   updateNumberDestination,
   cancelNumber,
   addNumberUsage,
-  getNumberUsage
+  getNumberUsage,
+  getApiNumber,
+  getTariffs
 } from '../controllers/numberController.js';
+import { tariffPrices } from '../services/tamarApi.js';
 
 const router = express.Router();
 
 router.post('/', authenticate, createNumber);
 router.get('/',authenticate, getNumbers);
+router.get('/api',authenticate, getApiNumber);
+router.get('/tariffs',authenticate, getTariffs);
+router.get('/tariffs/prices',authenticate, tariffPrices);
 // router.get('/search', searchNumbers);
 // router.post('/purchase/initiate', authenticate, validateNumberPurchase, initiateNumberPurchase);
 // router.post('/purchase/complete', authenticate, validateNumberPurchase, completeNumberPurchase);

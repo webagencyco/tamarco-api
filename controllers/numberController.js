@@ -1,4 +1,4 @@
-import { listAvailableNumbers, purchaseNumber } from "../services/tamarApi.js";
+import { listNumbers, purchaseNumber, listTariffs } from "../services/tamarApi.js";
 import { createPaymentIntent } from "../services/stripe.js";
 import Number from "../models/Number.js";
 
@@ -29,6 +29,25 @@ export const getNumbers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getTariffs = async (req, res) => {
+  try {
+    const tariffs = await listTariffs();
+    res.json(tariffs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getApiNumber = async (req, res) => {
+  try {
+    const numbers = await listNumbers();
+    res.json(numbers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+}
 
 export const initiateNumberPurchase = async (req, res) => {
   try {

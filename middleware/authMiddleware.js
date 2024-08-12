@@ -11,6 +11,6 @@ export const authenticate = (req, res, next) => {
     req.user = verified;
     next();
   } catch (error) {
-    res.status(403).json({ error: 'Invalid token' });
+    res.status(403).json({ error: 'Invalid User token' });
   }
 };
