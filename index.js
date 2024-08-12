@@ -14,11 +14,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
-// app.use((req, res, next) => {
-//   console.log('Headers:', req.headers);
-//   next();
-// });
-
 
 connect('mongodb://127.0.0.1:27017/virtual_numbers').finally(() => {
   console.log('Connected to MongoDB');

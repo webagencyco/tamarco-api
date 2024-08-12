@@ -4,12 +4,13 @@ import Number from "../models/Number.js";
 
 export const createNumber = async (req, res) => {
   try {
-    const { number, tariff, destination } = req.body;
+    const { number, tariff, destination, includedMinutes } = req.body;
     const newNumber = new Number({
       number,
       tariff,
       destination,
       userId: req.user.id,
+      includedMinutes,
     });
     await newNumber.save();
     res.json(newNumber);
@@ -20,9 +21,9 @@ export const createNumber = async (req, res) => {
 
 export const getNumbers = async (req, res) => {
   try {
-    const numbers = await Number.find(
-      { userId: req.user.id }
-    ).select('number _id');
+    const numbers = await Number.find({ userId: req.user.id }).select(
+      "number _id createdAt includedMinutes"
+    );
     res.json(numbers);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -101,9 +102,33 @@ export const addNumberUsage = async (req, res) => {
     if (!number) {
       return res.status(404).json({ message: "Number not found" });
     }
-    number.usage.push({ date, usageMinutes });
-    await number.save();
-    res.json({ message: "Usage data added successfully", number });
+
+    const usageEntry = { date, usageMinutes };
+    const updatedUsage = [...number.usage, usageEntry];
+
+    const minutesUsed = updatedUsage.reduce(
+      (total, entry) => total + entry.usageMinutes,
+      0
+    );
+    const totalCalls = updatedUsage.length;
+    const availableMinutes =
+      number.includedMinutes > minutesUsed
+        ? number.includedMinutes - minutesUsed
+        : 0;
+    const overage =
+      minutesUsed > number.includedMinutes
+        ? minutesUsed - number.includedMinutes
+        : 0;
+
+    await Number.findByIdAndUpdate(numberId, {
+      $push: { usage: usageEntry },
+      minutesUsed,
+      totalCalls,
+      availableMinutes,
+      overage,
+    });
+
+    res.json({ message: "Usage data added successfully" });
   } catch (error) {
     res
       .status(500)
@@ -114,12 +139,14 @@ export const addNumberUsage = async (req, res) => {
 export const getNumberUsage = async (req, res) => {
   const { numberId } = req.params;
   try {
-    const number = await Number.findById(numberId).select('usage');
+    const number = await Number.findById(numberId).select("usage ");
     if (!number) {
-      return res.status(404).json({ message: 'Number not found' });
+      return res.status(404).json({ message: "Number not found" });
     }
     res.json(number.usage);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching usage data', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching usage data", error: error.message });
   }
 };
