@@ -12,5 +12,4 @@ router.put('/update-address',authenticate, updateUserAddress);
 router.get('/user-details',authenticate, getUser)
 router.get('/verify-email/:token', verifyEmail);
 
-
 export default router;

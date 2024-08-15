@@ -6,17 +6,21 @@ const UsageSchema = new Schema({
 });
 
 const NumberSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  number: { type: String, required: true },
-  tariff: { type: String, required: true },
-  destination: { type: String, required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User'},
+  number: { type: String},
+  tariff: { type: Number},
+  price : { type: Number},
+  tariffPrice : { type: String},
+  destination: { type: String},
   includedMinutes: { type: Number}, 
   minutesUsed: { type: Number, default: 0 },
   totalCalls: { type: Number, default: 0 },
-  availableMinutes: { type: Number, default: 0 },
+  tailorPrice: { type: Number, default: 0 },
+  // availableMinutes: { type: Number, default: 0 },
+  numberType: { type: String, },
   overage: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
-  usage: [UsageSchema],
+  // usage: [UsageSchema],
 });
 
 NumberSchema.methods.calculateUsage = function() {
