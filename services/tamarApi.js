@@ -28,15 +28,23 @@ export const tariffPrices = async (req, res) => {
 
 export const purchaseNumber = async (tariff, number, destination) => {
   try {
-    const response = await tamarApi.post("/purchase/number/", {
-      tariff,
-      number,
-      destination,
-    });
+    const response = await tamarApi.post(
+      "/purchase/number/",
+      new URLSearchParams({
+        tariff,
+        number,
+        destination,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    console.error("Error purchasing number:", error.message);
-    throw new Error("Failed to purchase number");
+    console.error("Error purchasing number:", error);
+    throw error; // Re-throw the error so it can be caught in the calling function
   }
 };
 
@@ -104,7 +112,7 @@ export const listVoicemails = async (req, res) => {
     const response = await tamarApi.get("/voicemail/");
     res.json(response.data);
   } catch (error) {
-    res.status(500).json({ message: "Failed to list voicemails" })
+    res.status(500).json({ message: "Failed to list voicemails" });
   }
 };
 
@@ -130,7 +138,7 @@ export const updateVoicemailConfig = async (configData) => {
   } = configData;
 
   try {
-    const response = await tamarApi.post('/voicemail/update/', {
+    const response = await tamarApi.post("/voicemail/update/", {
       id,
       description,
       voicemail,
@@ -149,8 +157,8 @@ export const updateVoicemailConfig = async (configData) => {
 export const createVoicemail = async (req, res) => {
   try {
     const { description } = req.body;
-    const response = await tamarApi.post('/voicemail/new/', {
-      description
+    const response = await tamarApi.post("/voicemail/new/", {
+      description,
     });
     console.log(response.data);
     return res.json(response.data);
@@ -171,7 +179,7 @@ export const getHuntGroup = async (huntid) => {
 
 export const createHuntGroup = async (description, type, huntid) => {
   try {
-    const response = await tamarApi.post('/ntshunt/new/', {
+    const response = await tamarApi.post("/ntshunt/new/", {
       description,
       type,
       huntid,
@@ -185,7 +193,7 @@ export const createHuntGroup = async (description, type, huntid) => {
 
 export const listGreetings = async () => {
   try {
-    const response = await tamarApi.get('/greetings/');
+    const response = await tamarApi.get("/greetings/");
     return response.data;
   } catch (error) {
     console.error("Error listing greetings:", error.message);
@@ -195,7 +203,7 @@ export const listGreetings = async () => {
 
 export const createGreeting = async (description) => {
   try {
-    const response = await tamarApi.post('/greetings/new/', {
+    const response = await tamarApi.post("/greetings/new/", {
       description,
     });
     return response.data;
@@ -207,7 +215,7 @@ export const createGreeting = async (description) => {
 
 export const listBlacklist = async () => {
   try {
-    const response = await tamarApi.get('/blacklist/');
+    const response = await tamarApi.get("/blacklist/");
     return response.data;
   } catch (error) {
     console.error("Error listing blacklist:", error.message);
@@ -215,9 +223,14 @@ export const listBlacklist = async () => {
   }
 };
 
-export const addToBlacklist = async (number, action, blockinternational, description) => {
+export const addToBlacklist = async (
+  number,
+  action,
+  blockinternational,
+  description
+) => {
   try {
-    const response = await tamarApi.post('/blacklist/', {
+    const response = await tamarApi.post("/blacklist/", {
       number,
       action,
       blockinternational,
@@ -242,7 +255,7 @@ export const getHolidaySettings = async (id) => {
 
 export const createHolidaySetting = async (description) => {
   try {
-    const response = await tamarApi.post('/holiday/new/', {
+    const response = await tamarApi.post("/holiday/new/", {
       description,
     });
     return response.data;

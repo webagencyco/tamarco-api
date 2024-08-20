@@ -69,8 +69,9 @@ router.post("/greetings/new", createGreeting);
 router.get("/holiday", getHolidaySettings);
 router.post("/holiday/new", createHolidaySetting);
 
-// router.get("/blacklist", listBlacklist);
-// router.post("/blacklist/new", addToBlacklist);
+router.get("/blacklist", listBlacklist);
+router.post("/blacklist/new", addToBlacklist);
+
 // router.get('/search', searchNumbers);
 // router.post('/purchase/initiate', authenticate, validateNumberPurchase, initiateNumberPurchase);
 // router.post('/purchase/complete', authenticate, validateNumberPurchase, completeNumberPurchase);

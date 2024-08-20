@@ -43,22 +43,25 @@ export const processPayment = async (req, res) => {
     console.log("Payment saved:", newPayment._id);
 
     for (const numberDetails of numbers) {
-      const { number, tariff, destination, tailorPrice, price, tariffPrice } =
-        numberDetails;
+      const { number, tariff, destination, tailorPrice, price, tariffPrice } = numberDetails;
       const parsedTariff = parseFloat(tariff);
       const parsedPrice = parseFloat(price);
       const parsedTailorPrice = parseFloat(tailorPrice);
-      // console.log(parsedPrice, parsedTariff, parsedTailorPrice);
 
       try {
-        result = await purchaseNumber(tariffPrice, number, destination);
+        numberResult = await purchaseNumber(tariffPrice, number, destination);
         console.log("Purchase result:", result);
-        if(tailorPrice > 5){
 
-        } else if(tailorPrice < 5 && tailorPrice > 0){
-          whisperResult = await purchaseCallWhisper(number);
-          console.log("Whisper result:", whisperResult);
+        result = {
+          ...result,
+          ...numberResult,
         }
+        // if (tailorPrice > 5) {
+
+        // } else if (tailorPrice < 5 && tailorPrice > 0) {
+        //   whisperResult = await purchaseCallWhisper(number);
+        //   console.log("Whisper result:", whisperResult);
+        // }
 
         const newNumber = new Number({
           userId: req.user.id,
@@ -82,7 +85,6 @@ export const processPayment = async (req, res) => {
           currency,
         });
         await newInvoice.save();
-
       } catch (error) {
         console.error("Error processing number:", error.message);
       }
