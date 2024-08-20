@@ -44,12 +44,12 @@ export const processPayment = async (req, res) => {
 
     for (const numberDetails of numbers) {
       const { number, tariff, destination, tailorPrice, price, tariffPrice } = numberDetails;
-      const parsedTariff = parseFloat(tariff);
+      console.log(numberDetails)
       const parsedPrice = parseFloat(price);
       const parsedTailorPrice = parseFloat(tailorPrice);
 
       try {
-        numberResult = await purchaseNumber(tariffPrice, number, destination);
+        let numberResult = await purchaseNumber(tariffPrice, number, destination);
         console.log("Purchase result:", result);
 
         result = {
@@ -66,7 +66,7 @@ export const processPayment = async (req, res) => {
         const newNumber = new Number({
           userId: req.user.id,
           number,
-          tariff: parsedTariff,
+          tariff,
           price: parsedPrice,
           tariffPrice,
           tailorPrice: parsedTailorPrice,
@@ -84,6 +84,7 @@ export const processPayment = async (req, res) => {
           amount,
           currency,
         });
+
         await newInvoice.save();
       } catch (error) {
         console.error("Error processing number:", error.message);

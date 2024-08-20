@@ -44,7 +44,7 @@ export const purchaseNumber = async (tariff, number, destination) => {
     return response.data;
   } catch (error) {
     console.error("Error purchasing number:", error);
-    throw error; // Re-throw the error so it can be caught in the calling function
+    throw error;
   }
 };
 
